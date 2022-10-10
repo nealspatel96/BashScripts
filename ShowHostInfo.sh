@@ -2,40 +2,33 @@
 
 clear
 
-function exitprompt
-{
-   echo "would you like to choose another option? [y/n]"
-   read -s -N 1 userAns
-   if [ $userAns == 'y' ]
-   then
-      clear
-   else
-      echo "Press any key to exit the script..."
-      read -s -N 1
-      exit  
-   fi
+function back2menu
+{   
+   echo -e "\e[1;35mPress any key to go back to menu...\e[0m"
+   read -s -N 1
+   clear
 }
 
 function netInfo
 {
 
    clear
-   echo "Network Info Menu"
-   echo
-   echo "[1] Network Interfaces and IP Addresses"
-   echo "[2] Routing Table IPv4"
-   echo "[3] Routing Table IPv6"
-   echo "[4] Port Information"
-   echo "[5] ARP info"
-   echo "[6] Firewall status"
-   echo "[7] DNS Information"
-   echo "choose one of the following options:"
+   printf "\e[1;32;44mNetwork Info Menu\e[0m\n\n"
+   printf "\e[1;36m[1] \e[1;34mNetwork Interfaces and IP Addresses\e[0m\n"
+   printf "\e[1;36m[2] \e[1;34mRouting Table IPv4\e[0m\n"
+   printf "\e[1;36m[3] \e[1;34mRouting Table IPv6\e[0m\n"
+   printf "\e[1;36m[4] \e[1;34mPort Information\e[0m\n"
+   printf "\e[1;36m[5] \e[1;34mARP info\e[0m\n"
+   printf "\e[1;36m[6] \e[1;34mFirewall status\e[0m\n"
+   printf "\e[1;36m[7] \e[1;34mDNS Information\e[0m\n"
+   printf "\e[4;33mchoose one of the following options:\e[0m\n"
    read -s -N 1 userInput
+
    if [ $OSTYPE == "msys" ]
    then
       if [ -z $userInput ]
       then
-         echo "No selection made."
+         netInfo
       elif [ $userInput == '1' ]
       then
          ipconfig //all
@@ -56,16 +49,16 @@ function netInfo
          cmd //c netsh advfirewall show currentprofile
       elif [ $userInput == '7' ]
       then
-         printf "\nDNS Cache Entry: "
+         printf "\e[1;32m\nDNS Cache Entry: \e[0m"
          ipconfig //displaydns
       else
-         echo "Invalid Input"
+         netInfo
       fi
    elif [ $OSTYPE == "linux-gnu" ]
    then
       if [ -z $userInput ]
       then
-         echo "No selection made."
+         netInfo
       elif [ $userInput == '1' ]
       then
          ip a
@@ -88,10 +81,10 @@ function netInfo
       then
          cat /etc/resolv.conf | less
       else
-         echo "Invalid Input"
+         netInfo
       fi
    else
-      echo "Script does not support your OS."
+      echo -e "\e[1;31mScript does not support your OS.\e[0m"
    fi
 }
 
@@ -101,34 +94,31 @@ function showhostinfo
    then
       while [ true ]
       do
-         echo "Hostname: $COMPUTERNAME"
-         echo "Username: $USERNAME"
-         echo "Warning: Some features may require admin privileges in some hosts."
-         echo
-         echo "   Windows HostInfo Home Menu"
-         echo 
-         echo "[0] Exit Program"
-         echo "[1] Show detailed system information"
-         echo "[2] Show network information"
-         echo "[3] Show environment variables"
-         echo "[4] Show disk partition information"
-         echo "[5] Show cpu  information"
-         echo "[6] Show memory information"
-         echo "[7] Show current user tasks"
-         echo "[8] Start resource monitor"
-         echo "Choose one of the following options [type the number]:"
+         printf "\e[1;35mHostname: $COMPUTERNAME\nUsername: $USERNAME\e[0m\n\n"
+         printf "\e[1;31mWarning: Some features may require admin privileges in some hosts.\e[0m\n\n"
+         printf "   \e[1;32;44mWindows HostInfo Home Menu\e[0m\n\n"
+         printf "\e[1;36m[0] \e[1;31mExit Program\e[0m\n"
+         printf "\e[1;36m[1] \e[1;34mShow detailed system information\e[0m\n"
+         printf "\e[1;36m[2] \e[1;34mShow network information\e[0m\n"
+         printf "\e[1;36m[3] \e[1;34mShow environment variables\e[0m\n"
+         printf "\e[1;36m[4] \e[1;34mShow disk partition information\e[0m\n"
+         printf "\e[1;36m[5] \e[1;34mShow cpu  information\e[0m\n"
+         printf "\e[1;36m[6] \e[1;34mShow memory information\e[0m\n"
+         printf "\e[1;36m[7] \e[1;34mShow current user tasks\e[0m\n"
+         printf "\e[1;36m[8] \e[1;34mStart resource monitor\e[0m\n"
+         printf "\e[4;33mChoose one of the following numerical options:\e[0m\n"
          read -s -N 1 userOption
          clear
          if [ -z $userOption ]
          then
-            echo "No selection made."
+            continue
          elif [ $userOption == '0' ]
          then
             exit
          elif [ $userOption == '1' ]
          then
             systeminfo
-            echo "Launch msinfo32 GUI? [y/n]"
+            echo -e "\e[1;33mLaunch msinfo32 GUI? \e[1;36m[y/n]\e[0m"
             read -s -N 1 ms32ans
             if [ $ms32ans == 'y' ]
             then
@@ -141,27 +131,28 @@ function showhostinfo
          elif [ $userOption == '3' ]
          then
             env -v
-            echo "Would you like to start the Environment Variables GUI? [y/n]:"
+            echo -e "\e[1;33mWould you like to start the Environment Variables GUI? \e[1;36m[y/n]\e[0m"
             read -s -N 1 envans
             if [ $envans == 'y' ]
             then
-               echo "Launching Environment Variables GUI..."
+               echo -e "\e[1;32mLaunching Environment Variables GUI...\e[0m"
                cmd //c rundll32 sysdm.cpl,EditEnvironmentVariables &
                envans='n'
             fi
          elif [ $userOption == '4' ]
          then
             df -h
-            echo "Would you like to Disk Management GUI? [y/n]:"
+            echo -e "\e[1;33mWould you like to Disk Management GUI? \e[1;36m[y/n]\e[0m"
             read -s -N 1 dskans
             if [ $dskans == 'y' ]
             then
-               cmd //c diskmgmt
+               echo -e "\e[1;32mLaunching Disk Management GUI\e[0m"
+               cmd //c diskmgmt &
                dskans='n'
             fi
          elif [ $userOption == '5' ]
          then
-            echo "wmic CPU information:"
+            echo -e "\e[1;32mwmic CPU information:\e[0m"
             echo
             cmd //c wmic cpu list //format:list
          elif [ $userOption == '6' ]
@@ -169,57 +160,54 @@ function showhostinfo
            cmd //c systeminfo | findstr Memory
          elif [ $userOption == '7' ]
          then
-            echo "would you like to search for a specific task name thats running? [y/n]:"
+            echo -e "\e[1;33mWould you like to search for a specific task name thats running? \e[1;36m[y/n]\e[0m"
             read -s -N 1 tskschqst
             if [ $tskschqst == 'y' ]
             then
-               echo "enter the name of the task(s) [no spaces]:"
+               echo -e "\e[1;33mEnter the name of the task(s) \e[1;36m[no spaces]\e[0m"
                read tsksrch
-               tasklist //S $COMPUTERNAME //U $USERNAME | findstr $tsksrch
+               tasklist //S $COMPUTERNAME //U $USERNAME 2> /dev/null | findstr $tsksrch 2> /dev/null 
             else
-               tasklist //S $COMPUTERNAME //U $USERNAME
+               tasklist //S $COMPUTERNAME //U $USERNAME 2>/dev/null
             fi
-            echo "would you like to start task manager? [y/n]:"
+            echo -e "\e[1;33mWould you like to start task manager? \e[1;36m[y/n]\e[0m"
             read -s -N 1 tskans
             if [ $tskans == 'y' ]
             then
-               echo "Launching Task Manager..."
+               echo -e "\e[1;32mLaunching Task Manager...\e[0m"
                cmd //c taskmgr &
                tskans='n'
             fi
          elif [ $userOption == '8' ]
          then
-            echo "Launching Resource Monitor..."
+            echo -e "\e[1;32mLaunching Resource Monitor...\e[0m"
             cmd //c resmon &
          else
-            echo "Invalid User Input."
+            continue
          fi
-         exitprompt
+         back2menu
       done
    elif [ $OSTYPE = "linux-gnu" ]
    then
       while (true)
       do
-         echo "Hostname: $HOSTNAME"
-         echo "username: $USER"
-         echo "Warning: Some features may require admin privileges in some hosts."
-         echo
-         echo "   Linux HostInfo Home Menu"
-         echo 
-         echo "0. Exit Program"
-         echo "1. Show cpu  information"
-         echo "2. Show memory block information"
-         echo "3. Show network information"
-         echo "4. Show environment variables"
-         echo "5. Show disk partition information"
-         echo "6. Show current user tasks"
-         echo "7. Show PCI information"
-         echo "Choose one of the following options [type the number]:"
+         printf "\e[1;34mHostname: $HOSTNAME\nusername: $USER\e[0m\n\n"
+         printf "\e[1;33mWarning: Some features may require admin privileges in some hosts.\e[0m\n\n"
+         printf "   \e[1;32;35mLinux HostInfo Home Menu\e[0m\n\n"
+         printf "\e[1;36m[0] \e[1;31mExit Script.\e[0m\n"
+         printf "\e[1;36m[1] \e[1;34mShow cpu  information\e[0m\n"
+         printf "\e[1;36m[2] \e[1;34mShow memory block information\e[0m\n"
+         printf "\e[1;36m[3] \e[1;34mShow network information\e[0m\n"
+         printf "\e[1;36m[4] \e[1;34mShow environment variables\e[0m\n"
+         printf "\e[1;36m[5] \e[1;34mShow disk partition information\e[0m\n"
+         printf "\e[1;36m[6] \e[1;34mShow current user tasks\e[0m\n"
+         printf "\e[1;36m[7] \e[1;34mShow PCI information\e[0m\n"
+         printf "\e[4;33mChoose one of the following numerical options:\e[0m\n"
          read -s -N 1 userOption
 
          if [ -z $userOption ]
          then
-            echo "No selection made."
+            continue
          elif [ $userOption == '1' ]
          then
             lscpu
@@ -242,12 +230,12 @@ function showhostinfo
          then
             lspci
          else
-            echo "Invalid User Input."
+            continue
          fi
-         exitprompt
+         back2menu
       done
    else
-      echo "the following script is not supported for your computer based on your Operating System"
+      echo -e "\e[1;31mThe following script is not supported for your computer based on your Operating System\e[0m\n"
    fi
 
 
