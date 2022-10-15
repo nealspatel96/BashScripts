@@ -1,3 +1,0 @@
-#This file contains the path of aany files that we dont want in git.
-
-./BashLogs/*
