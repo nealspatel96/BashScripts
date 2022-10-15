@@ -4,7 +4,8 @@ source ./BashLib/*.sh
 
 out2file=""
 
-echo -e "$(tput setab 0)"
+logfilename="./BashLogs/datetime_$(date +%Y-%b-%d_%I-%M-%S-%p).log"
+
 
 function currentTime
 {
@@ -13,7 +14,8 @@ function currentTime
 
    if [ $out2file == "-f" ]
    then
-      time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n" | tee datetime.log
+      cp /dev/null $logfilename
+      time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n" | tee $logfilename
    else
       time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n"
    fi
@@ -26,7 +28,8 @@ function utcTime
    
    if [ $out2file == "-f" ]
    then
-      time printf "UTC Time: $(date -ud @$(date +%s))\n\n" | tee datetime.log
+      cp /dev/null $logfilename
+      time printf "UTC Time: $(date -ud @$(date +%s))\n\n" | tee $logfilename
    else
       time printf "UTC Time: $(date -ud @$(date +%s))\n\n"
    fi
@@ -39,7 +42,8 @@ function epochTime
 
    if [ $out2file == "-f" ]
    then
-      time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee datetime.log
+      cp /dev/null $logfilename
+      time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee $logfilename
    else
       time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n"
    fi
@@ -52,9 +56,13 @@ function displayAllTimeOptions
 
    if [ $out2file == "-f" ]
    then
+
+      cp /dev/null $logfilename
+
       time printf "$(date +%Z' 'Time:' '%a,' '%b' '%d,' '%Y' '%I:%M:%S' '%p)
 UTC Time: $(date -ud @$(date +%s))
-Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee datetime.log
+Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee $logfilename
+
    else
 
       time printf "$(date +%Z' 'Time:' '%a,' '%b' '%d,' '%Y' '%I:%M:%S' '%p)
@@ -73,7 +81,7 @@ function log2fileprompt
    then
       echo -e "\e[1;33m\nThe date/time option selected can be written to log file.\e[0m"
       echo -e "\e[1;33mThe file will be overwritten in real time with the most recent output.\e[0m"
-      echo -e "\e[1;33mOutput will be generated in datetime.log in the current dir. \e[0m"
+      echo -e "\e[1;33mThe datetime.log file output will be in the BashLogs dir. \e[0m"
       echo -e "\e[1;34m\n\nWould you like to output date/time to log file?\e[0m \e[1;36m[y/n]\e[0m"
       read -s -N 1 out2file
 
@@ -133,11 +141,6 @@ function datetimemain
          monitor displayAllTimeOptions $out2file
       else
          datetimemain $1
-      fi
-
-      if [ $out2file == "-f" ]
-      then
-         cp /dev/null ./datetime.log
       fi
 
    done
