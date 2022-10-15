@@ -101,6 +101,25 @@ function GitSetup
    fi
    echo -e "\e[1;31m$(cat ~/.gitconfig | grep "editor")\e[0m"
 
+   checkautocrlf=$(grep -q "autocrlf" ~/.gitconfig && echo $?)
+  if [ -z $checkautocrlf ]
+  then
+     git config --global core.autocrlf false
+  fi
+
+  echo -e "\e[1;31m$(cat ~/.gitconfig | grep "autocrlf")\e[0m"
+
+ if [ $OSTYPE == "linux-gnu" ]
+ then
+    checkcolorui=$(grep -q "[color]" ~/.gitconfig && echo $?)
+    if [ -z $checkcolorui ]
+    then
+       git config --global color.ui true
+    fi
+    echo -e "\e[1;31m$(cat ~/.gitconfig | grep "ui")\e[0m"
+ fi
+
+
    echo -e "\e[1;32mGit setup Finished.\e[1;0m"
 }
 
