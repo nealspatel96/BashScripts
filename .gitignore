@@ -2,5 +2,5 @@
 #This will be a placeholder directory where bash scripts can output log files if need be.
 
 #ignore all files in this directory:
-*
-*.log
+BashLogs/*
+BashLogs/*.log
