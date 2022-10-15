@@ -1,0 +1,3 @@
+
+#Convert crlf to lf [dos to unix] end line characters
+*.sh	text
