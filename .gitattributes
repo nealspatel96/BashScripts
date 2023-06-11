@@ -1,3 +1,4 @@
 
 #Convert crlf to lf [dos to unix] end line characters
-*.sh	text
+*.sh	text eol=lf
+*/*.sh text eol=lf
