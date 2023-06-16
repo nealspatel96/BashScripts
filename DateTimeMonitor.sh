@@ -1,111 +1,38 @@
 #!/bin/bash
 
-source ./BashLib/*.sh
-
-out2file=""
-
-logfilename="./BashLogs/datetime_$(date +%Y-%b-%d_%I-%M-%S-%p).log"
-
+source ./BashLib/Monitor.sh
 
 function currentTime
 {
-   
    echo -e "$(tput setaf 5 ; tput bold)"
-
-   if [ $out2file == "-f" ]
-   then
-      cp /dev/null $logfilename
-      time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n" | tee $logfilename
-   else
-      time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n"
-   fi
+   time printf "$(date +Date:' '%A,' '%B-%d-%Y%n$(date +%Z)' 'Time:' '%I:%M:%S' '%p)\n\n"
 }
 
 function utcTime
 {
-   
    echo -e "$(tput setaf 5 ; tput bold)"
-   
-   if [ $out2file == "-f" ]
-   then
-      cp /dev/null $logfilename
-      time printf "UTC Time: $(date -ud @$(date +%s))\n\n" | tee $logfilename
-   else
-      time printf "UTC Time: $(date -ud @$(date +%s))\n\n"
-   fi
+   time printf "UTC Time: $(date -ud @$(date +%s))\n\n"
 }
 
 function epochTime
 {
-
    echo -e "$(tput setaf 5 ; tput bold)"
-
-   if [ $out2file == "-f" ]
-   then
-      cp /dev/null $logfilename
-      time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee $logfilename
-   else
-      time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n"
-   fi
+   time printf "Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n"
 }
 
 function displayAllTimeOptions
 {
-
    echo -e "$(tput setaf 5 ; tput bold)"
-
-   if [ $out2file == "-f" ]
-   then
-
-      cp /dev/null $logfilename
-
-      time printf "$(date +%Z' 'Time:' '%a,' '%b' '%d,' '%Y' '%I:%M:%S' '%p)
-UTC Time: $(date -ud @$(date +%s))
-Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n" | tee $logfilename
-
-   else
-
-      time printf "$(date +%Z' 'Time:' '%a,' '%b' '%d,' '%Y' '%I:%M:%S' '%p)
+   time printf "$(date +%Z' 'Time:' '%a,' '%b' '%d,' '%Y' '%I:%M:%S' '%p)
 UTC Time: $(date -ud @$(date +%s))
 Seconds since Epoch[1/1/1970]: $(date +%s.%N)\n\n"
-
-   fi
-}
-
-function log2fileprompt
-{
-   clear
-   arg1=$1
-
-   if [ -z $arg1 ]
-   then
-      echo -e "\e[1;33m\nThe date/time option selected can be written to log file.\e[0m"
-      echo -e "\e[1;33mThe file will be overwritten in real time with the most recent output.\e[0m"
-      echo -e "\e[1;33mThe datetime.log file output will be in the BashLogs dir. \e[0m"
-      echo -e "\e[1;34m\n\nWould you like to output date/time to log file?\e[0m \e[1;36m[y/n]\e[0m"
-      read -s -N 1 out2file
-
-      if [ -z $out2file ]
-      then
-         log2fileprompt
-      elif [ $out2file == "y" ]
-      then
-        out2file="-f"
-      elif [ $out2file != "n" ]
-      then
-         log2fileprompt
-      fi
-   fi
-
 }
 
 function datetimemain
 {
-   out2file=$1
    clear
    while ( true )
    do
-      echo -e "\e[1;36m@author\e[0m \e[1;37m[Neal Patel]\e[0m \e[4;34m[https://github.com/nealspatel96]\e[0m\n\n\n"
       echo -e "    \e[0;45;1;36mDate/Time Home Menu \e[0m"
       echo
       echo -e "\e[1;36m[0]\e[0m \e[1;31mExit Program.\e[0m"
@@ -119,30 +46,25 @@ function datetimemain
 
       if [ -z $userInput ]
       then
-         datetimemain $1
+         datetimemain
       elif [ $userInput == '0' ]
       then
          exit
       elif [ $userInput == '1' ]
       then
-         log2fileprompt $1
-         monitor currentTime $out2file
+         monitor currentTime
       elif [ $userInput == '2' ]
       then
-         log2fileprompt $1
-         monitor utcTime $out2file
+         monitor utcTime
       elif [ $userInput == '3' ]
       then
-         log2fileprompt $1
-         monitor epochTime $out2file
+         monitor epochTime
       elif [ $userInput == '4' ]
       then
-         log2fileprompt $1
-         monitor displayAllTimeOptions $out2file
+         monitor displayAllTimeOptions
       else
-         datetimemain $1
+         datetimemain
       fi
-
    done
 }
 
